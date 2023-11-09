@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <TextView
+    android:id="@+id/welcomeTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:text="Welcome to Pocket Museum"
+    android:textSize="24sp"
+    android:textStyle="bold" />
+
+  <Button
+    android:id="@+id/seeArtButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/welcomeTitle"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="16dp"
+    android:text="See the Art of the Day" />
+</RelativeLayout>
