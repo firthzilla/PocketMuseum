@@ -1,6 +1,7 @@
 package com.example.pocketmuseum;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected JSONObject doInBackground(Void... params) {
       try {
+        Log.d("Load Artwork Task", "Starting network request");
         OkHttpClient client = new OkHttpClient();
         String apiKey = "7a2b9683-6f25-4e72-b05a-1a127e7582e4";
         String apiUrl = "https://api.harvardartmuseums.org/object";
@@ -51,14 +53,15 @@ public class MainActivity extends AppCompatActivity {
         // Add parameters to the API URL (e.g., specify the artwork of the day)
         String fullUrl = apiUrl + "?apikey=" + apiKey + "&sort=random";
 
+
         Request request = new Request.Builder()
           .url(fullUrl)
           .build();
 
         Response response = client.newCall(request).execute();
-
         if (response.isSuccessful()) {
           String responseBody = response.body().string();
+
           return new JSONObject(responseBody);
         }
       } catch (Exception e) {
@@ -80,11 +83,21 @@ public class MainActivity extends AppCompatActivity {
           if (records.length() > 0) {
             JSONObject artwork = records.getJSONObject(0);
 
+
+            // Extract and display artist name from Json response
+            String artistName = null;
+            if (artwork.has("people")) {
+              JSONArray peopleArray = artwork.getJSONArray("people");
+              if (peopleArray.length() > 0) {
+                JSONObject artist = peopleArray.getJSONObject(0);
+                artistName = artist.optString("name");
+              }
+            }
+
             // Extract and display the artwork data from the JSON response
             String artworkName = artwork.getString("title");
-            String artistName = artwork.getString("people");
             String description = artwork.getString("description");
-            String yearCreated = artwork.getString("date");
+            String yearCreated = artwork.getString("dated");
 
             // Update UI elements with the retrieved data
             artworkNameTextView.setText(artworkName);
@@ -99,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
           // Handle JSON parsing error
           Toast.makeText(MainActivity.this, "Error parsing JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();
           e.printStackTrace();
+
         }
       }
     }
